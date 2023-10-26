@@ -4,7 +4,7 @@ xmlns:bkImg="clr-namespace:BK.Controls;assembly=BK.Controls.ImageViewer"
 ```
 ### Использование контрола
 ```
-<bk:ImageViewer MinScale="0.1"
+<bk:ImageViewerPanel MinScale="0.1"
                 MaxScale="4"
 				ImageSource="{Binding CurrentImage}"/>
 ```
