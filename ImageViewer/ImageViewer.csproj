@@ -5,7 +5,8 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>BK.Controls.ImageViewer</AssemblyName>
     <RootNamespace>BK.Controls.ImageViewer</RootNamespace>
-    <Version>1.1</Version>
+    <Version>1.1.1</Version>
+    <Title>ImageViewer</Title>
   </PropertyGroup>
 
   <ItemGroup>
