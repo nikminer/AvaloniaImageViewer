@@ -61,6 +61,10 @@ namespace BK.Controls
             {
                 Scale = Bounds.Height / ImageSource.Size.Height;
             }
+            else
+            {
+                Scale = 1;
+            }
         }
 
 
