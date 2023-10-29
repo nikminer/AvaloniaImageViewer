@@ -6,14 +6,14 @@ namespace BK.Controls
 {
     public partial class ImageViewerPanel : UserControl
     {
-        public static readonly StyledProperty<double> MinScaleProperty = AvaloniaProperty.Register<ImageViewerPanel, double>(nameof(MinScale), 0.5d, defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
+        public static readonly StyledProperty<double> MinScaleProperty = AvaloniaProperty.Register<ImageViewerPanel, double>(nameof(MinScale), 0.0000000000000000000005d, defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
         public double MinScale
         {
             get => GetValue(MinScaleProperty);
             set => SetValue(MinScaleProperty, value);
         }
 
-        public static readonly StyledProperty<double> ScaleProperty = AvaloniaProperty.Register<ImageViewer, double>(nameof(Scale), 1.0d, defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
+        public static readonly StyledProperty<double> ScaleProperty = AvaloniaProperty.Register<ImageViewerPanel, double>(nameof(Scale), 1, defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
         public double Scale
         {
             get => GetValue(ScaleProperty);

@@ -92,7 +92,7 @@ namespace BK.Controls
 
         public ImageViewer()
         {
-            _pen = new Pen(new SolidColorBrush(Colors.Black), lineCap: PenLineCap.Round);
+            _pen = new Pen(new SolidColorBrush(Colors.Transparent), lineCap: PenLineCap.Round);
         }
 
 
@@ -175,7 +175,12 @@ namespace BK.Controls
         {
             var localBounds = new Rect(new Size(this.Bounds.Width, this.Bounds.Height));
             var clip = context.PushClip(this.Bounds);
-            context.DrawRectangle(Brushes.Black, _pen, localBounds, 1.0d);
+            context.DrawRectangle(Brushes.Transparent, _pen, localBounds, 1.0d);
+
+            if (Scale == 0)
+            {
+                FitImage();
+            }
 
             var halfMax = Math.Max(this.Bounds.Width / 2.0d, this.Bounds.Height / 2.0d) * Math.Sqrt(2.0d);
             var halfMin = Math.Min(this.Bounds.Width / 2.0d, this.Bounds.Height / 2.0d) / 1.3d;
@@ -196,6 +201,8 @@ namespace BK.Controls
             var mapPositionModifier = context.PushTransform(Matrix.CreateTranslation(new Vector(-ViewportCenterX, ViewportCenterY)));
 
             // now everything is rotated and scaled, and at the right position, now we're drawing strictly in world coordinates
+
+            
 
             if (ImageSource != null)
             {
