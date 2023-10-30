@@ -8,6 +8,9 @@ xmlns:bkImg="clr-namespace:BK.Controls;assembly=BK.Controls.ImageViewer"
                 MaxScale="4"
 				ImageSource="{Binding CurrentImage}"/>
 ```
+Обязательно:
 * ImageSource - Bitmap объект с изображением
+Необязательно:
+* ImageFit - Подстраивает изображение под размер окна (Height - по высоте, WidthTop - по ширине и премещает центра вверх, WidthCenter - по ширине, WidthBottom - по ширине и перемещает центр вниз)
 * MinScale - Минимальное приближение
 * MaxScale - Максимальное приближение
