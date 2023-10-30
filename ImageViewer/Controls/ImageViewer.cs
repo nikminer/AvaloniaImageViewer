@@ -8,6 +8,17 @@ using System;
 
 namespace BK.Controls
 {
+    public enum ImageFit
+    {
+        Height = 0,
+
+        WidthCenter = 3,
+        WidthTop = 4,
+        WidthBottom = 5,
+
+       
+    }
+
     public partial class ImageViewer : Control
     {
         private Point _cursorPoint;
@@ -15,6 +26,19 @@ namespace BK.Controls
         private IPen _pen;
 
         private bool _isPointerCaptured = false;
+
+
+        public static readonly DirectProperty<ImageViewer, ImageFit> ImageFitProperty = AvaloniaProperty.RegisterDirect<ImageViewer, ImageFit>(
+                nameof(ImageFit),
+                 o => o.ImageFit,
+                (o, v) => { o.ImageFit = v; o.FitImage(); }
+            );
+        private ImageFit imageFit;
+        public ImageFit ImageFit
+        {
+            get => imageFit;
+            set => SetAndRaise(ImageFitProperty, ref imageFit, value);
+        }
 
 
         public static readonly StyledProperty<double> ScaleProperty = AvaloniaProperty.Register<ImageViewer, double>(nameof(Scale), 1.0d);
@@ -25,7 +49,7 @@ namespace BK.Controls
         }
 
 
-        public static readonly StyledProperty<double> MinScaleProperty = AvaloniaProperty.Register<ImageViewer, double>(nameof(MinScale), 0.5d);
+        public static readonly StyledProperty<double> MinScaleProperty = AvaloniaProperty.Register<ImageViewer, double>(nameof(MinScale), 0.0000000000000000000005d);
         public double MinScale
         {
             get => GetValue(MinScaleProperty);
@@ -54,6 +78,71 @@ namespace BK.Controls
         }
 
         public void FitImage()
+        {
+            switch(imageFit)
+            {
+                case ImageFit.WidthBottom:
+                    this.FitWidthBottomImage();
+                    break;
+                case ImageFit.WidthCenter:
+                    this.FitWidthCenterImage();
+                    break;
+                case ImageFit.WidthTop:
+                    this.FitWidthTopImage();
+                    break;
+                default:
+                case ImageFit.Height:
+                    this.FitHeightCenterImage();
+                    break;
+            }
+        }
+
+        private void FitWidthTopImage()
+        {
+            ViewportCenterX = 0;
+            ViewportCenterY = 0;
+            if (ImageSource != null && ImageSource.Size.Width > Bounds.Width)
+            {
+                Scale = Bounds.Width / ImageSource.Size.Width;
+                ViewportCenterY += image.Size.Height / 2 - Bounds.Size.Height * Bounds.Size.AspectRatio;
+            }
+            else
+            {
+                Scale = 1;
+            }
+        }
+
+        private void FitWidthBottomImage()
+        {
+            ViewportCenterX = 0;
+            ViewportCenterY = 0;
+            if (ImageSource != null && ImageSource.Size.Width > Bounds.Width)
+            {
+                Scale = Bounds.Width / ImageSource.Size.Width;
+                ViewportCenterY -= image.Size.Height / 2 - Bounds.Size.Height * Bounds.Size.AspectRatio;
+            }
+            else
+            {
+                Scale = 1;
+            }
+        }
+
+        private void FitWidthCenterImage()
+        {
+            ViewportCenterX = 0;
+            ViewportCenterY = 0;
+            if (ImageSource != null && ImageSource.Size.Width > Bounds.Width)
+            {
+                Scale = Bounds.Width / ImageSource.Size.Width;
+            }
+            else
+            {
+                Scale = 1;
+            }
+        }
+
+
+        private void FitHeightCenterImage()
         {
             ViewportCenterX = 0;
             ViewportCenterY = 0;

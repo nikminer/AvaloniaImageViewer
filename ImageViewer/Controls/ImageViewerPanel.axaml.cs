@@ -34,7 +34,15 @@ namespace BK.Controls
             get => GetValue(ImageSourceProperty);
             set => SetValue(ImageSourceProperty, value);
         }
-          
+
+        public static readonly StyledProperty<ImageFit> ImageFitProperty = AvaloniaProperty.Register<ImageViewerPanel, ImageFit>(nameof(ImageFit), Controls.ImageFit.Height, defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
+        public ImageFit? ImageFit
+        {
+            get => GetValue(ImageFitProperty);
+            set => SetValue(ImageFitProperty, value);
+        }
+
+
         public ImageViewerPanel()
         {
             InitializeComponent();

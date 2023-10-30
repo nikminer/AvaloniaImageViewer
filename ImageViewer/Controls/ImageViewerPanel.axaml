@@ -9,5 +9,6 @@
 					MinScale="{Binding  $parent[UserControl].MinScale}" 
 					MaxScale="{Binding  $parent[UserControl].MaxScale}"
 					Scale="{Binding  $parent[UserControl].Scale}"
+					ImageFit="{Binding $parent[UserControl].ImageFit}"
 					ZIndex="6" />
 </UserControl>
