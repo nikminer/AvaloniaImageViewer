@@ -7,7 +7,7 @@ xmlns:bkImg="clr-namespace:BK.Controls;assembly=BK.Controls.ImageViewer"
 <bk:ImageViewerPanel MinScale="0.0000001"
                      MaxScale="4"
                      ImageFit="WidthTop"
-				     ImageSource="{Binding CurrentImage}"/>
+                     ImageSource="{Binding CurrentImage}"/>
 ```
 Обязательно:
 * ImageSource - Bitmap объект с изображением
