@@ -1,10 +1,13 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Input.GestureRecognizers;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using System;
+using System.Diagnostics;
+using System.Reflection.Metadata;
 
 namespace BK.Controls
 {
@@ -186,25 +189,68 @@ namespace BK.Controls
         public ImageViewer()
         {
             _pen = new Pen(new SolidColorBrush(Colors.Transparent), lineCap: PenLineCap.Round);
+            GestureRecognizers.Add(new PinchGestureRecognizer());
+            var scrollRecognizer = new ScrollGestureRecognizer()
+            {
+                CanHorizontallyScroll = true,
+                CanVerticallyScroll = true,
+            };
+            GestureRecognizers.Add(scrollRecognizer);
+            Gestures.PinchEvent.AddClassHandler<ImageViewer>((reciver, e) => reciver.OnPinching(e));
+
+            Gestures.DoubleTappedEvent.AddClassHandler<ImageViewer>((reciver, e) => reciver.FitImage());
+
+            Gestures.ScrollGestureEvent.AddClassHandler<ImageViewer>((reciver, e) => reciver.PullImage(e));
+
+            Gestures.ScrollGestureInertiaStartingEvent.AddClassHandler<ImageViewer>((reciver, e) => _smartphoneScrolling = true);
+            Gestures.ScrollGestureEndedEvent.AddClassHandler<ImageViewer>((reciver, e) => _smartphoneScrolling = false);
         }
 
+        private bool _smartphoneScrolling = false;
 
-        protected override void OnPointerMoved(PointerEventArgs e)
+        private void PullImage(ScrollGestureEventArgs  e)
         {
+            bool canX = true;
+            bool canY = true;
+
+            Point workingPoint = new Point(e.Delta.X, e.Delta.Y);
+            workingPoint /= Scale;
+
+            if (image != null)
+            {
+                canX = (workingPoint.X > 0 || ViewportCenterX - workingPoint.X < image.Size.Width / 2) && (workingPoint.X < 0 || ViewportCenterX - workingPoint.X > -image.Size.Width / 2);
+
+                canY = (workingPoint.Y > 0 || ViewportCenterY - workingPoint.Y < image.Size.Height / 2) && (workingPoint.Y < 0 || ViewportCenterY - workingPoint.Y > -image.Size.Height / 2);
+            }
+
+            if (canX)
+            {
+                ViewportCenterX += workingPoint.X;
+            }
+
+            if (canY)
+            {
+                ViewportCenterY -= workingPoint.Y;
+            }
+        }
+
+        
+        
+        protected override void OnPointerMoved(PointerEventArgs e)
+        { 
             base.OnPointerMoved(e);
 
             Point previousPoint = _cursorPoint;
-
-            _cursorPoint = e.GetPosition(this);
-
+            _cursorPoint = e.GetCurrentPoint(this).Position;
 
             if (_isPointerCaptured)
             {
                 Point oldWorldPoint = UIPointToWorldPoint(previousPoint, ViewportCenterX, ViewportCenterY, Scale, Rotation);
                 Point newWorldPoint = UIPointToWorldPoint(_cursorPoint, ViewportCenterX, ViewportCenterY, Scale, Rotation);
-
                 Vector diff = newWorldPoint - oldWorldPoint;
+               
 
+                //Vector diff = previousPoint -_cursorPoint ;
                 bool canX = true;
                 bool canY = true;
 
@@ -224,11 +270,17 @@ namespace BK.Controls
                 {
                     ViewportCenterY -= diff.Y;
                 }
+
+                Debug.WriteLine($"{ViewportCenterX} {ViewportCenterY}");
             }
         }
 
         protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
+            if (_smartphoneScrolling)
+            {
+                return;
+            }
             e.Handled = true;
             e.Pointer.Capture(this);
             _isPointerCaptured = true;
@@ -236,15 +288,22 @@ namespace BK.Controls
         }
         protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
+            if (_smartphoneScrolling)
+            {
+                return;
+            }
             e.Pointer.Capture(null);
             _isPointerCaptured = false;
             base.OnPointerReleased(e);
         }
 
+        
+
         protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
         {
             base.OnPointerWheelChanged(e);
-            var oldScale = Scale;
+
+            oldScale = Scale;
 
             var newScale = Scale * (1.0d + e.Delta.Y / 12.0d);
 
@@ -255,13 +314,22 @@ namespace BK.Controls
 
             Scale = newScale;
 
-            Point oldWorldPoint = UIPointToWorldPoint(_cursorPoint, ViewportCenterX, ViewportCenterY, oldScale, Rotation);
-            Point newWorldPoint = UIPointToWorldPoint(_cursorPoint, ViewportCenterX, ViewportCenterY, Scale, Rotation);
+            
+        }
+        double oldScale;
 
-            Vector diff = newWorldPoint - oldWorldPoint;
+        protected void OnPinching(PinchEventArgs e)
+        {
+            oldScale = Scale;
 
-            ViewportCenterX -= diff.X;
-            ViewportCenterY -= diff.Y;
+            var newScale = Scale + (e.Scale - 1) * oldScale / 50; 
+            
+            if (newScale < MinScale || newScale > MaxScale)
+            {
+                return;
+            }
+            Scale = newScale;
+            return;
         }
 
         public override void Render(DrawingContext context)
