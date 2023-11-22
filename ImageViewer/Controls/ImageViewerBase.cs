@@ -1,27 +1,13 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Input.GestureRecognizers;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using System;
-using System.Diagnostics;
-using System.Reflection.Metadata;
+using ImageViewer.Enums;
 
 namespace BK.Controls
 {
-    public enum ImageFit
-    {
-        Height = 0,
-
-        WidthCenter = 3,
-        WidthTop = 4,
-        WidthBottom = 5,
-
-       
-    }
-
     public partial class ImageViewer : Control
     {
         private Point _cursorPoint;
@@ -189,148 +175,11 @@ namespace BK.Controls
         public ImageViewer()
         {
             _pen = new Pen(new SolidColorBrush(Colors.Transparent), lineCap: PenLineCap.Round);
-            GestureRecognizers.Add(new PinchGestureRecognizer());
-            var scrollRecognizer = new ScrollGestureRecognizer()
-            {
-                CanHorizontallyScroll = true,
-                CanVerticallyScroll = true,
-            };
-            GestureRecognizers.Add(scrollRecognizer);
-            Gestures.PinchEvent.AddClassHandler<ImageViewer>((reciver, e) => reciver.OnPinching(e));
 
-            Gestures.DoubleTappedEvent.AddClassHandler<ImageViewer>((reciver, e) => reciver.FitImage());
-
-            Gestures.ScrollGestureEvent.AddClassHandler<ImageViewer>((reciver, e) => reciver.PullImage(e));
-
-            Gestures.ScrollGestureInertiaStartingEvent.AddClassHandler<ImageViewer>((reciver, e) => _smartphoneScrolling = true);
-            Gestures.ScrollGestureEndedEvent.AddClassHandler<ImageViewer>((reciver, e) => _smartphoneScrolling = false);
+            InitSmartphones();
         }
-
-        private bool _smartphoneScrolling = false;
-
-        private void PullImage(ScrollGestureEventArgs  e)
-        {
-            bool canX = true;
-            bool canY = true;
-
-            Point workingPoint = new Point(e.Delta.X, e.Delta.Y);
-            workingPoint /= Scale;
-
-            if (image != null)
-            {
-                canX = (workingPoint.X > 0 || ViewportCenterX - workingPoint.X < image.Size.Width / 2) && (workingPoint.X < 0 || ViewportCenterX - workingPoint.X > -image.Size.Width / 2);
-
-                canY = (workingPoint.Y > 0 || ViewportCenterY - workingPoint.Y < image.Size.Height / 2) && (workingPoint.Y < 0 || ViewportCenterY - workingPoint.Y > -image.Size.Height / 2);
-            }
-
-            if (canX)
-            {
-                ViewportCenterX += workingPoint.X;
-            }
-
-            if (canY)
-            {
-                ViewportCenterY -= workingPoint.Y;
-            }
-        }
-
         
-        
-        protected override void OnPointerMoved(PointerEventArgs e)
-        { 
-            base.OnPointerMoved(e);
-
-            Point previousPoint = _cursorPoint;
-            _cursorPoint = e.GetCurrentPoint(this).Position;
-
-            if (_isPointerCaptured)
-            {
-                Point oldWorldPoint = UIPointToWorldPoint(previousPoint, ViewportCenterX, ViewportCenterY, Scale, Rotation);
-                Point newWorldPoint = UIPointToWorldPoint(_cursorPoint, ViewportCenterX, ViewportCenterY, Scale, Rotation);
-                Vector diff = newWorldPoint - oldWorldPoint;
-               
-
-                //Vector diff = previousPoint -_cursorPoint ;
-                bool canX = true;
-                bool canY = true;
-
-                if (image != null)
-                {
-                    canX = (diff.X > 0 || ViewportCenterX - diff.X < image.Size.Width / 2) && (diff.X < 0 || ViewportCenterX - diff.X > -image.Size.Width / 2);
-
-                    canY = (diff.Y > 0 || ViewportCenterY - diff.Y < image.Size.Height / 2) && (diff.Y < 0 || ViewportCenterY - diff.Y > -image.Size.Height / 2);
-                }
-
-                if (canX)
-                {
-                    ViewportCenterX -= diff.X;
-                }
-
-                if (canY)
-                {
-                    ViewportCenterY -= diff.Y;
-                }
-
-                Debug.WriteLine($"{ViewportCenterX} {ViewportCenterY}");
-            }
-        }
-
-        protected override void OnPointerPressed(PointerPressedEventArgs e)
-        {
-            if (_smartphoneScrolling)
-            {
-                return;
-            }
-            e.Handled = true;
-            e.Pointer.Capture(this);
-            _isPointerCaptured = true;
-            base.OnPointerPressed(e);
-        }
-        protected override void OnPointerReleased(PointerReleasedEventArgs e)
-        {
-            if (_smartphoneScrolling)
-            {
-                return;
-            }
-            e.Pointer.Capture(null);
-            _isPointerCaptured = false;
-            base.OnPointerReleased(e);
-        }
-
-        
-
-        protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
-        {
-            base.OnPointerWheelChanged(e);
-
-            oldScale = Scale;
-
-            var newScale = Scale * (1.0d + e.Delta.Y / 12.0d);
-
-            if (newScale < MinScale || newScale > MaxScale)
-            {
-                return;
-            }
-
-            Scale = newScale;
-
-            
-        }
-        double oldScale;
-
-        protected void OnPinching(PinchEventArgs e)
-        {
-            oldScale = Scale;
-
-            var newScale = Scale + (e.Scale - 1) * oldScale / 50; 
-            
-            if (newScale < MinScale || newScale > MaxScale)
-            {
-                return;
-            }
-            Scale = newScale;
-            return;
-        }
+        double oldScale;    
 
         public override void Render(DrawingContext context)
         {
@@ -362,9 +211,6 @@ namespace BK.Controls
             var mapPositionModifier = context.PushTransform(Matrix.CreateTranslation(new Vector(-ViewportCenterX, ViewportCenterY)));
 
             // now everything is rotated and scaled, and at the right position, now we're drawing strictly in world coordinates
-
-            
-
             if (ImageSource != null)
             {
                 var image = ImageSource;
@@ -383,19 +229,6 @@ namespace BK.Controls
 
             // oh and draw again when you can, no rush, right? 
             Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);
-        }
-
-        private Point UIPointToWorldPoint(Point inPoint, double viewportCenterX, double viewportCenterY, double scale, double rotation)
-        {
-            Point workingPoint = new Point(inPoint.X, -inPoint.Y);
-            workingPoint += new Vector(-this.Bounds.Width / 2.0d, this.Bounds.Height / 2.0d);
-            workingPoint /= scale;
-
-            workingPoint = Matrix.CreateRotation(rotation).Transform(workingPoint);
-
-            workingPoint += new Vector(viewportCenterX, viewportCenterY);
-
-            return workingPoint;
         }
     }
 }
