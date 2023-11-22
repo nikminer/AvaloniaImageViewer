@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
+using ImageViewer.Enums;
 
 namespace BK.Controls
 {
@@ -35,8 +36,8 @@ namespace BK.Controls
             set => SetValue(ImageSourceProperty, value);
         }
 
-        public static readonly StyledProperty<ImageFit> ImageFitProperty = AvaloniaProperty.Register<ImageViewerPanel, ImageFit>(nameof(ImageFit), Controls.ImageFit.Height, defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
-        public ImageFit? ImageFit
+        public static readonly StyledProperty<ImageFit> ImageFitProperty = AvaloniaProperty.Register<ImageViewerPanel, ImageFit>(nameof(ImageFit), ImageFit.Height, defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
+        public ImageFit ImageFit
         {
             get => GetValue(ImageFitProperty);
             set => SetValue(ImageFitProperty, value);
