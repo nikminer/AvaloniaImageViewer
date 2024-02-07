@@ -6,7 +6,7 @@ using Avalonia.Threading;
 using System;
 using ImageViewer.Enums;
 
-namespace BK.Controls
+namespace ImageViewer
 {
     public partial class ImageViewer : Control
     {

@@ -3,7 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using ImageViewer.Enums;
 
-namespace BK.Controls
+namespace ImageViewer
 {
     public partial class ImageViewerPanel : UserControl
     {

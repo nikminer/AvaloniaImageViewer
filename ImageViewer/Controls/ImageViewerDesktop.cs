@@ -2,7 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 
-namespace BK.Controls
+namespace ImageViewer
 {
     public partial class ImageViewer: Control
     {

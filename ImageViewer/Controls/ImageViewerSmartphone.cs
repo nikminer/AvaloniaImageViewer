@@ -3,7 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Input.GestureRecognizers;
 
-namespace BK.Controls
+namespace ImageViewer
 {
     public partial class ImageViewer: Control
     {

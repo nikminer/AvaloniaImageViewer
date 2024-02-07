@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 Cursor="SizeAll"
-			 xmlns:bk="clr-namespace:BK.Controls;assembly=BK.Controls.ImageViewer"
-             x:Class="BK.Controls.ImageViewerPanel">
+			 xmlns:bk="clr-namespace:ImageViewer;assembly=ImageViewer"
+             x:Class="ImageViewer.ImageViewerPanel">
 	<bk:ImageViewer ImageSource="{Binding $parent[UserControl].ImageSource}" 
 					MinScale="{Binding  $parent[UserControl].MinScale}" 
 					MaxScale="{Binding  $parent[UserControl].MaxScale}"
