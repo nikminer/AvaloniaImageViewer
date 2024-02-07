@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:ImageViewer.Sample.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ImageViewer.Sample.Views.MainView"
+			 xmlns:ImgView="clr-namespace:ImageViewer;assembly=ImageViewer"
+             x:DataType="vm:MainViewModel">
+    <Design.DataContext>
+      <!-- This only sets the DataContext for the previewer in an IDE,
+           to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+      <vm:MainViewModel />
+    </Design.DataContext>
+	<Grid RowDefinitions="80, 1*">
+		<StackPanel Margin="10" Orientation="Horizontal" Spacing="20">
+			<TextBlock VerticalAlignment="Center" 
+					   Text="Двойной клик - возврат к начальной позиции"/>
+			<ComboBox SelectedItem="{Binding SelectedImageFit}"
+					  VerticalAlignment="Center"
+					  ItemsSource="{Binding ImageFits}"
+					  />
+			<StackPanel Width="150">
+				<Label Content="MinScale"/>
+				<Slider Minimum="0.01"
+						Maximum="1"
+						Value="{Binding MinScale}"
+						FlowDirection="RightToLeft"/>
+			</StackPanel>
+
+			<StackPanel Width="150">
+				<Label Content="MaxScale"/>
+				<Slider Minimum="1"
+						Maximum="40"
+						Value="{Binding MaxScale}"/>
+			</StackPanel>
+		</StackPanel>
+		<ImgView:ImageViewerPanel MinScale="{Binding MinScale}"
+								  Background="Gray"
+								  MaxScale="{Binding MaxScale}"
+								  ImageFit="{Binding SelectedImageFit}"
+								  ImageSource="{Binding CurrentImage}"
+								  Grid.Row="1"/>	
+	</Grid>
+
+</UserControl>

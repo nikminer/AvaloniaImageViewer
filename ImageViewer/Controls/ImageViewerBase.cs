@@ -20,7 +20,8 @@ namespace ImageViewer
         public static readonly DirectProperty<ImageViewer, ImageFit> ImageFitProperty = AvaloniaProperty.RegisterDirect<ImageViewer, ImageFit>(
                 nameof(ImageFit),
                  o => o.ImageFit,
-                (o, v) => { o.ImageFit = v; o.FitImage(); }
+                (o, v) => { o.ImageFit = v; o.FitImage(); },
+                defaultBindingMode: Avalonia.Data.BindingMode.TwoWay
             );
         private ImageFit imageFit;
         public ImageFit ImageFit
@@ -38,7 +39,7 @@ namespace ImageViewer
         }
 
 
-        public static readonly StyledProperty<double> MinScaleProperty = AvaloniaProperty.Register<ImageViewer, double>(nameof(MinScale), 0.0000000000000000000005d);
+        public static readonly StyledProperty<double> MinScaleProperty = AvaloniaProperty.Register<ImageViewer, double>(nameof(MinScale), 0.0000000000000000000005d, defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
         public double MinScale
         {
             get => GetValue(MinScaleProperty);
@@ -46,7 +47,7 @@ namespace ImageViewer
         }
 
 
-        public static readonly StyledProperty<double> MaxScaleProperty = AvaloniaProperty.Register<ImageViewer, double>(nameof(MaxScale), 5d);
+        public static readonly StyledProperty<double> MaxScaleProperty = AvaloniaProperty.Register<ImageViewer, double>(nameof(MaxScale), 5d, defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
         public double MaxScale
         {
             get => GetValue(MaxScaleProperty);
