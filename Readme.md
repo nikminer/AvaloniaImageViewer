@@ -1,10 +1,10 @@
 ### Подключение библиотеки
 ```
-xmlns:bkImg="clr-namespace:BK.Controls;assembly=BK.Controls.ImageViewer"
+xmlns:ImgView="clr-namespace:ImageViewer;assembly=ImageViewer"
 ```
 ### Использование контрола
 ```
-<bk:ImageViewerPanel MinScale="0.0000001"
+<ImgView:ImageViewerPanel MinScale="0.0000001"
                      MaxScale="4"
                      ImageFit="WidthTop"
                      ImageSource="{Binding CurrentImage}"/>
