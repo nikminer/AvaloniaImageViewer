@@ -1,10 +1,13 @@
+#### AvaloniaImageViewer
+Кроссплатформенный контрол, для просмотра высокодетализированных изображений, позвволяет приближать отдалять и перемещать изображение в пределах контрола. Работает под Windows, Linux и Android.
+
 ### Подключение библиотеки
 ```
-xmlns:bkImg="clr-namespace:BK.Controls;assembly=BK.Controls.ImageViewer"
+xmlns:ImgView="clr-namespace:ImageViewer;assembly=ImageViewer"
 ```
 ### Использование контрола
 ```
-<bk:ImageViewerPanel MinScale="0.0000001"
+<ImgView:ImageViewerPanel MinScale="0.0000001"
                      MaxScale="4"
                      ImageFit="WidthTop"
                      ImageSource="{Binding CurrentImage}"/>
