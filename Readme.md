@@ -1,3 +1,6 @@
+#### AvaloniaImageViewer
+Кроссплатформенный контрол, для просмотра высокодетализированных изображений, позвволяет приближать отдалять и перемещать изображение в пределах контрола. Работает под Windows, Linux и Android.
+
 ### Подключение библиотеки
 ```
 xmlns:ImgView="clr-namespace:ImageViewer;assembly=ImageViewer"
